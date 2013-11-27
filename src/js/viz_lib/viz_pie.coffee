@@ -4,11 +4,11 @@ window.viz ?= {}
 viz.renderPieChart = (data, containerSelector, colorFunction, trimLegend=-1, legendData=null) ->
     legendData ?= data.map (x) -> x.name
     width = 450
-    height = 300
+    height = 200
     radius = Math.min(width, height) / 2
     arc = d3.svg.arc()\
       .outerRadius(radius - 10)\
-      .innerRadius(0)
+      .innerRadius(radius - 50)
     pie = d3.layout.pie()\
       .sort(null)\
       .value((d) -> d.value)
@@ -18,7 +18,7 @@ viz.renderPieChart = (data, containerSelector, colorFunction, trimLegend=-1, leg
       .attr("width", width)\
       .attr("height", height)\
       .append("g")\
-      .attr("transform", "translate("+radius+"," + height / 2 + ")")
+      .attr("transform", "translate("+(15+radius)+"," + height / 2 + ")")
 
     g = svg.selectAll(".arc")\
       .data(pie(data))\
@@ -34,7 +34,7 @@ viz.renderPieChart = (data, containerSelector, colorFunction, trimLegend=-1, leg
       .enter()\
       .append("g")\
       .attr("class", "legend")\
-      .attr("transform", (d, i) -> "translate(-150," + (i*20 - 130) + ")")
+      .attr("transform", (d, i) -> "translate(-150," + (i*18 - 90) + ")")
     legend.append("rect")\
       .attr("x", width - 18)\
       .attr("width", 18)\

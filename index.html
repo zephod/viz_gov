@@ -10,37 +10,39 @@
     <title>DataViz Prototype</title>
   </head>
   <body>
-    <div class="container" style="padding-top: 40px;padding-bottom:40px;">
-      <div class="row">
-        <div class="col-md-9">
-          <h3>CoInvestment Contributions</h3>
-          <div id="graph_coinvestment" class="graph">
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="coinvestment-right">
-            <h3>CoInvestment To Date</h3>
-            <h1 id="coinvestment-total"></h1>
-          </div>
+    <div class="viz-body">
+      <hr/>
+      <div id="graph_bubble">
+        <h3>CoInvestment Contributions</h3>
+        <div class="coinvestment-right">
+          <h3>CoInvestment To Date</h3>
+          <h1 id="coinvestment-total"></h1>
+          <small>Foundations are collaborative investors in the sector. Of the £6.2 million invested by these foundations it contributes to a wider co-investment.</small>
         </div>
       </div>
       <hr/>
-      <h3>Investment Strategies</h3>
-      <div id="graph_sankey" class="graph"></div>
+      <div id="graph_sankey">
+        <h3>Investment Strategies</h3>
+      </div>
       <hr/>
-      <div class="row">
-        <div class="col-md-6">
-          <h3>Sector Summary</h3>
-          <div id="graph_pie1"></div>
+      <div>
+        <div style="width:50%;float:left;">
+          <div id="graph_pie1">
+            <h3>Sector Summary</h3>
+          </div>
         </div>
-        <div class="col-md-6">
-          <h3>Unsecured Investments</h3>
-          <div id="graph_pie2"></div>
+        <div style="width:50%;float:left;">
+          <div id="graph_pie2">
+            <h3>Unsecured Investments</h3>
+          </div>
+        </div>
+        <div class="clearfix">
         </div>
       </div>
       <hr/>
-      <h3>Year-On-Year Cash Investment</h3>
-      <div id="graph_yearonyear" class="graph"></div>
+      <div id="graph_yearonyear">
+        <h3>Year-On-Year Cash Investment</h3>
+      </div>
     </div>
   </body>
 </html>

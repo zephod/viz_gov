@@ -72,6 +72,10 @@ module.exports = function(grunt) {
         files: 'src/js/**/*.coffee',
         tasks: 'coffee:viz',
       },
+      viz_styles: {
+        files: 'src/css/viz.less',
+        tasks: 'less:viz'
+      },
     },
     imagemin: {
       build: {

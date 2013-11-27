@@ -8,7 +8,7 @@ viz.renderStackedBar = ->
     bottom: 30
     left: 40
 
-  width  = 960 - margin.left - margin.right
+  width  = 920 - margin.left - margin.right
   height = 500 - margin.top - margin.bottom
   x0     = d3.scale.ordinal().rangeRoundBands([0, width], .1)
   y      = d3.scale.linear().range([height, 0])
