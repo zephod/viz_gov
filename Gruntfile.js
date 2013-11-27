@@ -56,7 +56,10 @@ module.exports = function(grunt) {
     },
     coffee: {
       viz: {
-        src: 'src/js/viz.coffee',
+        src: [
+          'src/js/viz_lib/*.coffee',
+          'src/js/viz.coffee'
+        ],
         dest: 'assets/js/viz.js'
       }
     },
@@ -66,11 +69,9 @@ module.exports = function(grunt) {
         tasks: 'less:shared'
       },
       viz_script: {
-        files: 'src/js/viz.coffee',
+        files: 'src/js/**/*.coffee',
         tasks: 'coffee:viz',
       },
-      viz_style: {
-      }
     },
     imagemin: {
       build: {
