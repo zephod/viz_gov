@@ -58,6 +58,17 @@ viz.renderStackedBar = ->
       .attr("y", (d) -> y(d.value+d.sumOfPrevious))\
       .attr("height", (d) -> height - y(d.value))\
       .style("fill", (d) -> viz.sector_color(d.name))
+
+
+    ul = d3.select("#graph_yearonyear")\
+      .append("ul")
+    ul.selectAll('li')\
+      .data(viz.sector_list)\
+      .enter()\
+      .append('li')\
+      .text( (d) -> d )
+
+
     legend = svg.selectAll(".legend")\
       .data(viz.sector_list)\
       .enter()\

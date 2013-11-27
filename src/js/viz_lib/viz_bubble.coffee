@@ -19,8 +19,10 @@ viz.renderBubbleChart = (data,graphSelector,colorFunction) ->
     .attr("height", height + margin.top + margin.bottom)\
     .append("g")\
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-  x.domain [data.points[0].date,data.points[data.points.length-1].date]
-  y.domain [0, d3.max(data.points, (d) -> d.cash )]
+  min_date = d3.min data.points, (d)->d.date
+  max_date = d3.max data.points, (d)->d.date
+  x.domain [min_date,max_date]
+  y.domain [0, d3.max(data.points, (d) -> d.y )]
   svg.append("g")\
     .attr("class", "x axis")\
     .attr("transform", "translate(0," + height + ")")\
@@ -33,7 +35,7 @@ viz.renderBubbleChart = (data,graphSelector,colorFunction) ->
     .attr("y", 6)\
     .attr("dy", ".71em")\
     .style("text-anchor", "end")\
-    .text("Cash Invested")
+    .text("(£)   Coinvestment")
   circle = svg.selectAll(".circle")\
     .data(data.points)\
     .enter()\
@@ -41,7 +43,7 @@ viz.renderBubbleChart = (data,graphSelector,colorFunction) ->
     .attr("r", (d) -> d.radius)\
     .attr("transform", (d)->
       _x = x(d.date)
-      _y = y(d.cash)
+      _y = y(d.y)
       return 'translate('+_x+','+_y+')'
     )
     .style("fill", colorFunction )

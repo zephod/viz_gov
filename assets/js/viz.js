@@ -82,7 +82,7 @@
     yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(d3.format(".2s"));
     svg = d3.select("#graph_yearonyear").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     return d3.json("data/etl_yearonyear.json", function(data) {
-      var legend, state;
+      var legend, state, ul;
       x0.domain(data.series.map(function(d) {
         return d.major;
       }));
@@ -117,6 +117,10 @@
       }).style("fill", function(d) {
         return viz.sector_color(d.name);
       });
+      ul = d3.select("#graph_yearonyear").append("ul");
+      ul.selectAll('li').data(viz.sector_list).enter().append('li').text(function(d) {
+        return d;
+      });
       legend = svg.selectAll(".legend").data(viz.sector_list).enter().append("g").attr("class", "legend").attr("transform", function(d, i) {
         return "translate(230," + i * 20 + ")";
       });
@@ -137,7 +141,7 @@
   }
 
   viz.renderBubbleChart = function(data, graphSelector, colorFunction) {
-    var circle, height, margin, svg, width, x, xAxis, y, yAxis;
+    var circle, height, margin, max_date, min_date, svg, width, x, xAxis, y, yAxis;
     margin = {
       top: 20,
       right: 20,
@@ -151,20 +155,26 @@
     xAxis = d3.svg.axis().scale(x).orient("bottom");
     yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(d3.format(".2s"));
     svg = d3.select(graphSelector).append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    x.domain([data.points[0].date, data.points[data.points.length - 1].date]);
+    min_date = d3.min(data.points, function(d) {
+      return d.date;
+    });
+    max_date = d3.max(data.points, function(d) {
+      return d.date;
+    });
+    x.domain([min_date, max_date]);
     y.domain([
       0, d3.max(data.points, function(d) {
-        return d.cash;
+        return d.y;
       })
     ]);
     svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")").call(xAxis);
-    svg.append("g").attr("class", "y axis").call(yAxis).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", ".71em").style("text-anchor", "end").text("Cash Invested");
+    svg.append("g").attr("class", "y axis").call(yAxis).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", ".71em").style("text-anchor", "end").text("(£)   Coinvestment");
     circle = svg.selectAll(".circle").data(data.points).enter().append("circle").attr("r", function(d) {
       return d.radius;
     }).attr("transform", function(d) {
       var _x, _y;
       _x = x(d.date);
-      _y = y(d.cash);
+      _y = y(d.y);
       return 'translate(' + _x + ',' + _y + ')';
     }).style("fill", colorFunction);
     return /(?:)/.style("stroke", function(d) {
@@ -316,7 +326,8 @@
       $('#coinvestment-total').html('<span class="poundsign">£</span>' + viz.money_to_string(data.total));
       colorFunction = d3.scale.category10();
       data.points.forEach(function(d) {
-        d.radius = Math.max(5, d.coinvestment / 900000);
+        d.radius = Math.max(5, d.cash / 20000);
+        d.y = d.coinvestment;
         return d.date = d3.time.format("%Y-%m-%d").parse(d.date);
       });
       return viz.renderBubbleChart(data, '#graph_bubble', function(x) {

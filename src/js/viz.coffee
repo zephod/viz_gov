@@ -17,8 +17,10 @@ $ ->
     colorFunction = d3.scale.category10()
     # Prepare the data for D3
     data.points.forEach (d) ->
-      #d.radius = Math.log(d.coinvestment)
-      d.radius = Math.max(5,d.coinvestment/900000)
+      # d.radius = Math.max(5,d.coinvestment/900000)
+      # d.y = d.cash
+      d.radius = Math.max(5,d.cash/20000)
+      d.y = d.coinvestment
       d.date = d3.time.format("%Y-%m-%d").parse(d.date)
     viz.renderBubbleChart(data,'#graph_bubble',(x)->colorFunction(x.origin))
 
