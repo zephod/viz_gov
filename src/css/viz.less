@@ -1,0 +1,89 @@
+body {
+  background: #fff;
+}
+h3 { font-family: 'Open Sans'; }
+.container {
+  background: #fff;
+}
+.graph {
+  background: #fff;
+  margin-bottom: 10px;
+  min-width: 800px;
+  min-height: 100px;
+}
+#graph_sankey_demo,
+#graph_sankey {
+  margin: 0 auto 20px auto;
+  width: 980px;
+  .node rect {
+    cursor: move;
+    fill-opacity: .9;
+    shape-rendering: crispEdges;
+  }
+  .node text {
+    pointer-events: none;
+    font-size: 11px;
+    //font-family: 'Helvetica Neue';
+  }
+  .link {
+    fill: none;
+    stroke: #038;
+    stroke-opacity: .13;
+  }
+  .link:hover {
+    stroke-opacity: .32;
+  }
+}
+
+.coinvestment-right {
+  text-align: right;
+  padding-right: 10px;
+}
+#coinvestment-total {
+  white-space: nowrap;
+  color: #444;
+  font-size: 37px;
+  .poundsign {
+    display: inline-block;
+    color: #600;
+    padding-right: 7px;
+    font-size: 48px;
+    vertical-align: middle;
+    margin-top: -6px;
+  }
+}
+#graph_yearonyear {
+  svg { 
+    margin: 0 auto;
+    display:block;
+  }
+  .legend {
+    background: rgba(255,255,255,0.8);
+  }
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .bar {
+    fill: steelblue;
+  }
+
+  .x.axis path {
+    display: none;
+  }
+}
+
+#graph_pie1 {
+  svg {
+  }
+  .arc path {
+    stroke: #fff;
+  }
+}
+.legend {
+  font-size: 10px;
+  font-weight: bold;
+}

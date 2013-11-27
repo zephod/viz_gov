@@ -1,0 +1,196 @@
+{
+    "series": [
+        {
+            "major": "2010", 
+            "ages": [
+                {
+                    "name": "Housing, Property and Essential Needs", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Employment and Training", 
+                    "value": 12000
+                }, 
+                {
+                    "name": "Multiple Sectors", 
+                    "value": 256756
+                }, 
+                {
+                    "name": "Politics, Influence and Participation", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Education, Learning and Skills", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Finance and Legal Matters", 
+                    "value": 200000
+                }, 
+                {
+                    "name": "Criminal Justic and Public Safety", 
+                    "value": 554193
+                }, 
+                {
+                    "name": "Healthy Living and Lifestyle", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Personal and Social Well-Being", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Climate Change & Conservation of the Natural Environment", 
+                    "value": 0
+                }
+            ]
+        }, 
+        {
+            "major": "2011", 
+            "ages": [
+                {
+                    "name": "Housing, Property and Essential Needs", 
+                    "value": 685000
+                }, 
+                {
+                    "name": "Employment and Training", 
+                    "value": 50000
+                }, 
+                {
+                    "name": "Multiple Sectors", 
+                    "value": 130000
+                }, 
+                {
+                    "name": "Politics, Influence and Participation", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Education, Learning and Skills", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Finance and Legal Matters", 
+                    "value": 10000
+                }, 
+                {
+                    "name": "Criminal Justic and Public Safety", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Healthy Living and Lifestyle", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Personal and Social Well-Being", 
+                    "value": 20455
+                }, 
+                {
+                    "name": "Climate Change & Conservation of the Natural Environment", 
+                    "value": 145387
+                }
+            ]
+        }, 
+        {
+            "major": "2012", 
+            "ages": [
+                {
+                    "name": "Housing, Property and Essential Needs", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Employment and Training", 
+                    "value": 187982
+                }, 
+                {
+                    "name": "Multiple Sectors", 
+                    "value": 85773
+                }, 
+                {
+                    "name": "Politics, Influence and Participation", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Education, Learning and Skills", 
+                    "value": 365000
+                }, 
+                {
+                    "name": "Finance and Legal Matters", 
+                    "value": 116668
+                }, 
+                {
+                    "name": "Criminal Justic and Public Safety", 
+                    "value": 250000
+                }, 
+                {
+                    "name": "Healthy Living and Lifestyle", 
+                    "value": 0
+                }, 
+                {
+                    "name": "Personal and Social Well-Being", 
+                    "value": 100000
+                }, 
+                {
+                    "name": "Climate Change & Conservation of the Natural Environment", 
+                    "value": 0
+                }
+            ]
+        }, 
+        {
+            "major": "2013", 
+            "ages": [
+                {
+                    "name": "Housing, Property and Essential Needs", 
+                    "value": 1460000
+                }, 
+                {
+                    "name": "Employment and Training", 
+                    "value": 405000
+                }, 
+                {
+                    "name": "Multiple Sectors", 
+                    "value": 311832
+                }, 
+                {
+                    "name": "Politics, Influence and Participation", 
+                    "value": 305459
+                }, 
+                {
+                    "name": "Education, Learning and Skills", 
+                    "value": 267742
+                }, 
+                {
+                    "name": "Finance and Legal Matters", 
+                    "value": 200000
+                }, 
+                {
+                    "name": "Criminal Justic and Public Safety", 
+                    "value": 54193
+                }, 
+                {
+                    "name": "Healthy Living and Lifestyle", 
+                    "value": 14000
+                }, 
+                {
+                    "name": "Personal and Social Well-Being", 
+                    "value": 12290
+                }, 
+                {
+                    "name": "Climate Change & Conservation of the Natural Environment", 
+                    "value": 0
+                }
+            ]
+        }
+    ], 
+    "legend": [
+        "Housing, Property and Essential Needs", 
+        "Employment and Training", 
+        "Multiple Sectors", 
+        "Politics, Influence and Participation", 
+        "Education, Learning and Skills", 
+        "Finance and Legal Matters", 
+        "Criminal Justic and Public Safety", 
+        "Healthy Living and Lifestyle", 
+        "Personal and Social Well-Being", 
+        "Climate Change & Conservation of the Natural Environment"
+    ]
+}
