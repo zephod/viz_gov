@@ -67,7 +67,8 @@
   }
 
   viz.renderStackedBar = function() {
-    var height, margin, svg, width, x0, xAxis, y, yAxis;
+    var container, height, margin, svg, width, x0, xAxis, y, yAxis;
+    container = $('#graph_yearonyear');
     margin = {
       top: 20,
       right: 250,
@@ -82,13 +83,13 @@
     yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(d3.format(".2s"));
     svg = d3.select("#graph_yearonyear").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     return d3.json("data/etl_yearonyear.json", function(data) {
-      var legend, state, ul;
+      var state, toggleColors, ul;
       x0.domain(data.series.map(function(d) {
         return d.major;
       }));
       y.domain([
         0, d3.max(data.series, function(d) {
-          return d3.sum(d.ages, function(d) {
+          return d3.sum(d.elements, function(d) {
             return d.value;
           });
         })
@@ -96,19 +97,27 @@
       data.series.forEach(function(series) {
         var sumOfPrevious;
         sumOfPrevious = 0;
-        return series.ages.forEach(function(d) {
+        series.elements.forEach(function(d) {
           d.sumOfPrevious = sumOfPrevious;
           return sumOfPrevious += d.value;
         });
+        return series.sum = sumOfPrevious;
       });
       svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")").call(xAxis);
       svg.append("g").attr("class", "y axis").call(yAxis).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", ".71em").style("text-anchor", "end").text("Cash Invested");
       state = svg.selectAll(".state").data(data.series).enter().append("g").attr("class", "g").attr("transform", function(d) {
         return "translate(" + x0(d.major) + ",0)";
       });
+      state.append('text').attr('x', 30).attr('y', function(d) {
+        return y(d.sum) - 5;
+      }).text(function(d) {
+        return '£' + viz.money_to_string(d.sum);
+      });
       state.selectAll("rect").data(function(d) {
-        return d.ages;
-      }).enter().append("rect").attr("width", x0.rangeBand()).attr("x", function(d) {
+        return d.elements;
+      }).enter().append("rect").attr("class", function(d) {
+        return "hoverable hover-" + viz.text_to_css_class(d.name);
+      }).attr("width", x0.rangeBand()).attr("x", function(d) {
         return x0(d.name);
       }).attr("y", function(d) {
         return y(d.value + d.sumOfPrevious);
@@ -116,20 +125,48 @@
         return height - y(d.value);
       }).style("fill", function(d) {
         return viz.sector_color(d.name);
+      }).attr('data-col1', function(d) {
+        return viz.sector_color(d.name);
+      }).attr('data-col2', function(d) {
+        return d3.rgb(viz.sector_color(d.name)).brighter(0.3);
       });
-      ul = d3.select("#graph_yearonyear").append("ul");
-      ul.selectAll('li').data(viz.sector_list).enter().append('li').text(function(d) {
-        return d;
-      });
-      legend = svg.selectAll(".legend").data(viz.sector_list).enter().append("g").attr("class", "legend").attr("transform", function(d, i) {
-        return "translate(230," + i * 20 + ")";
-      });
-      legend.append("rect").attr("x", width - 18).attr("width", 18).attr("height", 18).style("fill", viz.sector_color).style("stroke", function(d) {
-        return '#000';
-      });
-      return legend.append("text").attr("x", width - 24).attr("y", 9).attr("dy", ".35em").style("text-anchor", "end").text(function(d) {
-        return viz.trim(d, 35);
-      });
+      ul = d3.select("#graph_yearonyear").append("ul").attr('class', 'legend');
+      ul.selectAll('li').data(viz.sector_list).enter().append('li').attr("class", function(d) {
+        return "hoverable hover-" + viz.text_to_css_class(d);
+      }).text(function(d) {
+        return viz.trim(d, 34);
+      }).append('div').attr('class', 'swatch').style('background-color', viz.sector_color);
+      toggleColors = function(e) {
+        var classes, x, _i, _len, _results;
+        classes = $(this).attr('class').split(' ');
+        _results = [];
+        for (_i = 0, _len = classes.length; _i < _len; _i++) {
+          x = classes[_i];
+          if (x.substring(0, 6) === 'hover-') {
+            _results.push(container.find('.' + x).each(function(i, el) {
+              el = $(el);
+              if (el.is('li')) {
+                if (e.type === "mouseover") {
+                  return el.addClass('hovering');
+                } else {
+                  return el.removeClass('hovering');
+                }
+              } else if (el.is('rect')) {
+                if (e.type === "mouseover") {
+                  return el.css('fill', el.attr('data-col2'));
+                } else {
+                  return el.css('fill', el.attr('data-col1'));
+                }
+              }
+            }));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      };
+      container.find('.hoverable').on('mouseover', toggleColors);
+      return container.find('.hoverable').on('mouseout', toggleColors);
     });
   };
 
@@ -169,7 +206,7 @@
     ]);
     svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")").call(xAxis);
     svg.append("g").attr("class", "y axis").call(yAxis).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", ".71em").style("text-anchor", "end").text("(£)   Coinvestment");
-    circle = svg.selectAll(".circle").data(data.points).enter().append("circle").attr("r", function(d) {
+    return circle = svg.selectAll(".circle").data(data.points).enter().append("circle").attr("r", function(d) {
       return d.radius;
     }).attr("transform", function(d) {
       var _x, _y;
@@ -177,9 +214,6 @@
       _y = y(d.y);
       return 'translate(' + _x + ',' + _y + ')';
     }).style("fill", colorFunction);
-    return /(?:)/.style("stroke", function(d) {
-      return d3.rgb(colorFunction(d)).darker(1);
-    });
   };
 
 }).call(this);
@@ -314,13 +348,13 @@
 
   $(function() {
     d3.json("data/etl_pie1.json", function(data) {
-      data.forEach(function(x) {
+      return data.forEach(function(x) {
         viz.sector_color(x.name);
         return viz.sector_list.push(x.name);
       });
-      viz.renderSankey();
-      return viz.renderStackedBar();
     });
+    viz.renderSankey();
+    viz.renderStackedBar();
     d3.json("data/etl_bubblechart.json", function(data) {
       var colorFunction;
       $('#coinvestment-total').html('<span class="poundsign">£</span>' + viz.money_to_string(data.total));
@@ -380,5 +414,9 @@
   viz.sector_color = d3.scale.category20c();
 
   viz.sector_list = [];
+
+  viz.text_to_css_class = function(x) {
+    return x.toLowerCase().replace(/[ ]/g, '-').replace(/[^a-z-]/g, '');
+  };
 
 }).call(this);

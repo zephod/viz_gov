@@ -47,4 +47,3 @@ viz.renderBubbleChart = (data,graphSelector,colorFunction) ->
       return 'translate('+_x+','+_y+')'
     )
     .style("fill", colorFunction )
-    //.style("stroke", (d) -> d3.rgb(colorFunction(d)).darker 1 )

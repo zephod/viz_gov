@@ -9,10 +9,28 @@ h3 { font-family: 'Open Sans'; }
   background: #fff;
   width: 940px;
   margin: 30px auto;
-  .legend {
+  ul.legend {
     font-size: 10px;
     font-weight: bold;
     color: #555;
+    margin-left: 0;
+    list-style-type: none;
+    width: 230px;
+    border: 1px solid #e0e0e0;
+    padding: 5px;
+    padding-left: 0px;
+    li { 
+      display: block;
+      text-align: right;
+      vertical-align: middle;
+      .swatch {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        vertical-align: middle;
+        margin-left: 8px;
+      }
+    }
   }
   .axis path,
   .axis line {
@@ -89,6 +107,20 @@ h3 { font-family: 'Open Sans'; }
   }
   #graph_yearonyear {
     padding: 10px 20px;
+    position: relative;
+    .caption {
+      background: #f0f;
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      width: 100px;
+      height: 100px;
+    }
+    .legend {
+      position: absolute;
+      top: 40px;
+      right: 20px;
+    }
     svg { 
       margin: 0 auto;
       display:block;
@@ -102,6 +134,9 @@ h3 { font-family: 'Open Sans'; }
       stroke: #000;
       shape-rendering: crispEdges;
     }
+    rect {
+      shape-rendering: crispEdges;
+    }
     .bar {
       fill: steelblue;
     }
@@ -111,3 +146,9 @@ h3 { font-family: 'Open Sans'; }
   }
 }
 
+li {
+  &.hovering {
+    color: #000;
+    background: #e0e0e0;
+  }
+}

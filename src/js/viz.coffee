@@ -8,9 +8,9 @@ $ ->
     data.forEach (x) -> 
       viz.sector_color x.name
       viz.sector_list.push x.name
-    # Render all graphs
-    viz.renderSankey()
-    viz.renderStackedBar()
+  # Render all graphs
+  viz.renderSankey()
+  viz.renderStackedBar()
 
   d3.json "data/etl_bubblechart.json", (data) ->
     $('#coinvestment-total').html( '<span class="poundsign">£</span>'+viz.money_to_string data.total )
@@ -55,4 +55,6 @@ viz.money_to_string = (amount) ->
   return amount + out
 viz.sector_color = d3.scale.category20c()
 viz.sector_list = []
+viz.text_to_css_class = (x) ->
+  x.toLowerCase().replace(/[ ]/g,'-').replace(/[^a-z-]/g,'')
 

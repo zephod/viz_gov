@@ -2,6 +2,7 @@
 window.viz ?= {}
 
 viz.renderStackedBar = ->
+  container = $('#graph_yearonyear')
   margin =
     top: 20
     right: 250
@@ -22,13 +23,14 @@ viz.renderStackedBar = ->
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
   d3.json "data/etl_yearonyear.json", (data) ->
     x0.domain data.series.map((d) -> d.major)
-    y.domain [0, d3.max(data.series, (d) -> d3.sum d.ages, (d) -> d.value )]
+    y.domain [0, d3.max(data.series, (d) -> d3.sum d.elements, (d) -> d.value )]
     # Populate data with offsets
     data.series.forEach (series) ->
       sumOfPrevious = 0
-      series.ages.forEach (d) ->
+      series.elements.forEach (d) ->
         d.sumOfPrevious = sumOfPrevious
         sumOfPrevious += d.value
+      series.sum = sumOfPrevious
 
     svg.append("g")\
       .attr("class", "x axis")\
@@ -49,42 +51,52 @@ viz.renderStackedBar = ->
       .append("g")\
       .attr("class", "g")\
       .attr("transform", (d) -> "translate(" + x0(d.major) + ",0)")
+    state.append('text')\
+      .attr('x',30)\
+      .attr('y',(d)->y(d.sum)-5)\
+      .text((d)->'£'+viz.money_to_string(d.sum))
     state.selectAll("rect")\
-      .data((d) -> d.ages)\
+      .data((d) -> d.elements)\
       .enter()\
       .append("rect")\
+      .attr("class", (d) -> "hoverable hover-"+viz.text_to_css_class(d.name))\
       .attr("width", x0.rangeBand())\
       .attr("x", (d) -> x0(d.name))\
       .attr("y", (d) -> y(d.value+d.sumOfPrevious))\
       .attr("height", (d) -> height - y(d.value))\
-      .style("fill", (d) -> viz.sector_color(d.name))
-
+      .style("fill", (d) -> viz.sector_color(d.name))\
+      .attr('data-col1', (d)->viz.sector_color(d.name))\
+      .attr('data-col2', (d)->d3.rgb(viz.sector_color(d.name)).brighter 0.3)
 
     ul = d3.select("#graph_yearonyear")\
-      .append("ul")
+      .append("ul")\
+      .attr('class','legend')
     ul.selectAll('li')\
       .data(viz.sector_list)\
       .enter()\
       .append('li')\
-      .text( (d) -> d )
+      .attr("class", (d) -> "hoverable hover-"+viz.text_to_css_class(d))\
+      .text( (d) -> viz.trim(d,34) )
+      .append('div')\
+      .attr('class','swatch')\
+      .style('background-color', viz.sector_color)
 
-
-    legend = svg.selectAll(".legend")\
-      .data(viz.sector_list)\
-      .enter()\
-      .append("g")\
-      .attr("class", "legend")\
-      .attr("transform", (d, i) -> "translate(230," + i * 20 + ")")
-    legend.append("rect")\
-      .attr("x", width - 18)\
-      .attr("width", 18)\
-      .attr("height", 18)\
-      .style("fill", viz.sector_color)\
-      .style("stroke", (d) -> '#000')
-    legend.append("text")\
-      .attr("x", width - 24)\
-      .attr("y", 9)\
-      .attr("dy", ".35em")\
-      .style("text-anchor", "end")\
-      .text((d) -> viz.trim(d,35))
-
+    toggleColors = (e) ->
+      classes = $(this).attr('class').split(' ')
+      # get hover class name eg. hover-foo-bar
+      for x in classes
+        if x.substring(0,6)=='hover-'
+          container.find('.'+x).each (i,el) ->
+            el = $(el)
+            if el.is('li')
+              if e.type=="mouseover"
+                el.addClass 'hovering'
+              else
+                el.removeClass 'hovering'
+            else if el.is('rect')
+              if e.type=="mouseover"
+                el.css('fill',el.attr('data-col2') )
+              else
+                el.css('fill',el.attr('data-col1') )
+    container.find('.hoverable').on 'mouseover', toggleColors
+    container.find('.hoverable').on 'mouseout', toggleColors
