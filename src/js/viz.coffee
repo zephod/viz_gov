@@ -3,30 +3,27 @@ window.viz ?= {}
 # Document.onload()
 # -----------------
 $ ->
-  d3.json "data/etl_pie1.json", (data) ->
+  d3.json "data/graphs.json", (data) ->
     # Initialise sector colors
-    data.forEach (x) -> 
+    data.pie1.forEach (x) -> 
       viz.sector_color x.name
       viz.sector_list.push x.name
-  # Render all graphs
-  viz.renderSankey()
-  viz.renderStackedBar()
-
-  d3.json "data/etl_bubblechart.json", (data) ->
-    $('#coinvestment-total').html( '<span class="poundsign">£</span>'+viz.money_to_string data.total )
-    colorFunction = d3.scale.category10()
-    # Prepare the data for D3
-    data.points.forEach (d) ->
-      # d.radius = Math.max(5,d.coinvestment/900000)
-      # d.y = d.cash
+    # Render Sankey of discrete relationships
+    viz.renderSankey data.sankey
+    # Render bar chart of yearly performance
+    viz.renderStackedBar data.bar
+    # Render totals
+    $('#coinvestment-total').html( '<span class="poundsign">£</span>'+viz.money_to_string data.coinvestment_total )
+    $('#investment-total').html( '<span class="poundsign">£</span>'+viz.money_to_string data.investment_total )
+    # Render Bubblechart of coinvestments
+    data.bubble.points.forEach (d) ->
       d.radius = Math.max(5,d.cash/20000)
       d.y = d.coinvestment
       d.date = d3.time.format("%Y-%m-%d").parse(d.date)
-    viz.renderBubbleChart(data,'#graph_bubble',(x)->colorFunction(x.origin))
-
-  d3.json "data/etl_pie1.json", (data) ->
-    viz.renderPieChart(data,'#graph_pie1',viz.sector_color,25,viz.sector_list)
-  d3.json "data/etl_pie2.json", (data) ->
+    viz.renderBubbleChart(data.bubble,'#graph_bubble',d3.scale.category10())
+    # Render pie chart of sector investments
+    viz.renderPieChart(data.pie1,'#graph_pie1',viz.sector_color,32,viz.sector_list)
+    # Render pie chart of unsecured investments
     known_colors = []
     pie2_color = (x) ->
         index = known_colors.indexOf(x)
@@ -38,7 +35,40 @@ $ ->
         if x=='Loans and facilities - Partially secured'
           return d3.rgb('#74C476')
         return d3.rgb('#193B79').brighter(index/2)
-    viz.renderPieChart(data,'#graph_pie2',pie2_color)
+    viz.renderPieChart(data.pie2,'#graph_pie2',pie2_color)
+
+    # Bind to all hoverable elements
+    $('.hoverable').on 'mouseover', (e) ->
+      $('li.hoverable').removeClass 'hovering'
+      $('svg .hoverable').each (i,el) ->
+          $(el).css
+            'fill'   : $(el).attr('data-col1') 
+            'stroke' : 'none'
+      $('.hoverable').trigger 'hoverend'
+      $('circle.hoverable').css('opacity',0.5)
+      # get hover class name eg. hover-foo-bar
+      classes = $(this).attr('class').split(' ')
+      # get hover class name eg. hover-foo-bar
+      for x in classes
+        if x.substring(0,6)=='hover-'
+          elements = $('.'+x)
+          elements.trigger 'hoverstart' 
+          elements.each (i,el) ->
+            el = $(el)
+            if el.is('li')
+              if e.type=="mouseover"
+                el.addClass 'hovering'
+              else
+                el.removeClass 'hovering'
+            else if el.is('rect') or el.is('path') or el.is('circle')
+              if e.type=="mouseover"
+                el.css('fill',el.attr('data-col2') )
+                el.css('stroke','#000' )
+              else
+                el.css('fill',el.attr('data-col1') )
+                el.css('stroke','none' )
+              if el.is('circle')
+                el.css('opacity',1)
 
 # Util
 # ----
@@ -58,3 +88,16 @@ viz.sector_list = []
 viz.text_to_css_class = (x) ->
   x.toLowerCase().replace(/[ ]/g,'-').replace(/[^a-z-]/g,'')
 
+viz.legend = (container,elements,colorFunction,trim=-1) ->
+    ul = container\
+      .append("ul")\
+      .attr('class','legend')
+    ul.selectAll('li')\
+      .data(elements)\
+      .enter()\
+      .append('li')\
+      .attr("class", (d) -> "hoverable hover-"+viz.text_to_css_class(d))\
+      .text( (d) -> viz.trim(d,trim) )
+      .append('div')\
+      .attr('class','swatch')\
+      .style('background-color',colorFunction)

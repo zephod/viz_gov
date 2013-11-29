@@ -45,5 +45,11 @@ viz.renderBubbleChart = (data,graphSelector,colorFunction) ->
       _x = x(d.date)
       _y = y(d.y)
       return 'translate('+_x+','+_y+')'
-    )
-    .style("fill", colorFunction )
+    )\
+    .attr('class',(d)->'hoverable hover-'+viz.text_to_css_class(d.origin))\
+    .style("fill", (d)->colorFunction(d.origin) )
+    .attr("data-col1", (d)->colorFunction(d.origin) )
+    .attr("data-col2", (d)->d3.rgb(colorFunction(d.origin)).brighter .5 )
+
+  viz.legend( d3.select(graphSelector), data.legend, colorFunction )
+

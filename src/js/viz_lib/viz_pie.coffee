@@ -12,6 +12,8 @@ viz.renderPieChart = (data, containerSelector, colorFunction, trimLegend=-1, leg
     pie = d3.layout.pie()\
       .sort(null)\
       .value((d) -> d.value)
+    container = $(containerSelector)
+    caption = $('<div class="caption"/>').appendTo(container)
 
     svg = d3.select(containerSelector)\
       .append("svg")\
@@ -27,24 +29,17 @@ viz.renderPieChart = (data, containerSelector, colorFunction, trimLegend=-1, leg
       .attr("class", "arc")
     g.append("path")\
       .attr("d", arc)\
-      .style("fill", (d) -> colorFunction(d.data.name))
+      .style("fill", (d) -> colorFunction(d.data.name))\
+      .attr("class", (d) -> "hoverable hover-"+viz.text_to_css_class(d.data.name))\
+      .attr("data-col1", (d) -> colorFunction(d.data.name))\
+      .attr("data-col2", (d) -> d3.rgb(colorFunction(d.data.name)).brighter .5)\
+      .attr('data-caption',(d)->'£'+viz.money_to_string d.value)
 
-    legend = svg.selectAll(".legend")\
-      .data(data)\
-      .enter()\
-      .append("g")\
-      .attr("class", "legend")\
-      .attr("transform", (d, i) -> "translate(-150," + (i*18 - 90) + ")")
-    legend.append("rect")\
-      .attr("x", width - 18)\
-      .attr("width", 18)\
-      .attr("height", 18)\
-      .style("fill", (d)->colorFunction(d.name))\
-      .style("stroke", (d) -> '#000')
-    legend.append("text")\
-      .attr("x", width - 24)\
-      .attr("y", 9)\
-      .attr("dy", ".35em")\
-      .style("text-anchor", "end")\
-      .text((d) -> viz.trim(d.name,trimLegend))
+    legendData = data.map (d)->d.name
+    viz.legend( d3.select(containerSelector), legendData, colorFunction, trimLegend )
 
+    # Dynamic captioning
+    container.find('path').bind 'hoverend', (e) ->
+      caption.html ''
+    container.find('path').bind 'hoverstart', (e) ->
+      caption.html this.getAttribute('data-caption')

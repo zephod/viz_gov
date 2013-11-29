@@ -12,6 +12,7 @@ h3 { font-family: 'Open Sans'; }
   ul.legend {
     font-size: 10px;
     font-weight: bold;
+    overflow: hidden;
     color: #555;
     margin-left: 0;
     list-style-type: none;
@@ -32,6 +33,20 @@ h3 { font-family: 'Open Sans'; }
       }
     }
   }
+  #investment-total,
+  #coinvestment-total {
+    white-space: nowrap;
+    color: #555;
+    font-size: 37px;
+    .poundsign {
+      display: inline-block;
+      color: #333;
+      padding-right: 7px;
+      font-size: 48px;
+      vertical-align: middle;
+      margin-top: -6px;
+    }
+  }
   .axis path,
   .axis line {
     fill: none;
@@ -41,14 +56,14 @@ h3 { font-family: 'Open Sans'; }
   #graph_bubble {
     position: relative;
     padding: 10px 20px;
+    .legend {
+      position: absolute;
+      top: 50px;
+      left: 110px;
+      width: 195px;
+    }
     svg {
-      circle {
-        stroke: #000;
-        stroke-opacity: .3;
-        &:hover {
-          stroke-opacity: 1;
-        }
-      }
+      circle { opacity: 0.5; }
     }
     .coinvestment-right {
       position: absolute;
@@ -62,19 +77,6 @@ h3 { font-family: 'Open Sans'; }
         display: block;
         width: 229px;
         color: #555;
-      }
-    }
-    #coinvestment-total {
-      white-space: nowrap;
-      color: #555;
-      font-size: 37px;
-      .poundsign {
-        display: inline-block;
-        color: #333;
-        padding-right: 7px;
-        font-size: 48px;
-        vertical-align: middle;
-        margin-top: -6px;
       }
     }
   }
@@ -99,15 +101,43 @@ h3 { font-family: 'Open Sans'; }
       stroke-opacity: .32;
     }
   }
+  #graph_pie1,
+  #graph_pie2 {
+    .caption {
+      pointer-events: none;
+      width: 180px;
+      height: 40px;
+      position: absolute;
+      left: 48px;
+      top: 135px;
+      text-align:center;
+    }
+    position: relative;
+    .legend {
+      position: absolute;
+      top: 40px;
+      right: 20px;
+    }
+  }
   #graph_pie1 {
     padding: 10px 10px 10px 20px;
+    .legend { width: 220px; }
   }
   #graph_pie2 {
     padding: 10px 20px 10px 10px;
+    .caption { width: 157px; }
   }
   #graph_yearonyear {
     padding: 10px 20px;
     position: relative;
+    .yearonyear-right {
+      position: absolute;
+      right: 20px;
+      top: 40px;
+      pointer-events: none;
+      text-align: right;
+      padding-right: 10px;
+    }
     .caption {
       background: #f0f;
       position: absolute;
@@ -118,7 +148,7 @@ h3 { font-family: 'Open Sans'; }
     }
     .legend {
       position: absolute;
-      top: 40px;
+      top: 140px;
       right: 20px;
     }
     svg { 
